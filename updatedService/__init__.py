@@ -18,11 +18,11 @@ class Service:
 
 class ServiceManager:
     def __init__(self) -> None:
-        self.services = dict()
+        self.services = list()
         
     def import_service(self, item):
         newService = Service(item)
-        self.services[newService.id] = newService
+        self.services.append(newService)
         
     def load_from_db(self):
         logging.debug(f"Connecting to DB...")
@@ -40,7 +40,7 @@ class ServiceManager:
         return len(self.services)
     
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, indent=4)
+        return json.dumps(self.services, default=lambda o: o.__dict__)
     
             
 def main(documents: func.DocumentList) -> str:
