@@ -54,7 +54,9 @@ def rebuild_table_and_cache() -> int:
     logging.debug(f"Connecting to redisHost { os.environ['redisHost'] }")
     r = redis.StrictRedis(host=os.environ['redisHost'], port=6380, password=os.environ['redisKey'], ssl=True)
     logging.info(f"Set for wso.webui.service.table returned { r.set('wso.webui.service.table', sm.toJSON()) }")
+    logging.info(f"Persist for wso.webui.service.table returned { r.persist('wso.webui.service.table') }")
     logging.info(f"Set for wso.webui.service.count returned { r.set('wso.webui.service.count', sm.count_services()) }")
+    logging.info(f"Persist for wso.webui.service.count returned { r.persist('wso.webui.service.count') }")
     return sm.count_services()
     
 
