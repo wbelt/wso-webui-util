@@ -25,6 +25,7 @@ class ServiceManager:
         self.services[newService.id] = newService
         
     def load_from_db(self):
+        logging.debug(f"Connecting to DB...")
         client = CosmosClient.from_connection_string(os.environ['wsoMainConnectionString'])
         db = client.get_database_client("service-repository")
         c = db.get_container_client("services")
@@ -41,11 +42,7 @@ class ServiceManager:
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
     
-    def setRedis(self):
-        r = redis.StrictRedis(host=os.environ['redisHost'], port=6380, password=os.environ['redisKey'], ssl=True)
-        r.set("wso.webui.service.table", self.toJSON())
-        r.set("wso.webui.service.count", self.count_services())
-        
+            
 def main(documents: func.DocumentList) -> str:
     if documents:
         logging.info('Document id: %s', documents[0]['id'])
@@ -54,7 +51,10 @@ def main(documents: func.DocumentList) -> str:
 def rebuild_table_and_cache() -> int:
     sm = ServiceManager()
     sm.load_from_db()
-    sm.setRedis()
+    logging.debug(f"Connecting to redisHost { os.environ['redisHost'] }")
+    r = redis.StrictRedis(host=os.environ['redisHost'], port=6380, password=os.environ['redisKey'], ssl=True)
+    logging.info(f"Set for wso.webui.service.table returned { r.set('wso.webui.service.table', sm.toJSON()) }")
+    logging.info(f"Set for wso.webui.service.count returned { r.set('wso.webui.service.count', sm.count_services()) }")
     return sm.count_services()
     
 
