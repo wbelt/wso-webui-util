@@ -43,7 +43,8 @@ class ServiceManager:
     
     def setRedis(self):
         r = redis.StrictRedis(host=os.environ['redisHost'], port=6380, password=os.environ['redisKey'], ssl=True)
-        r.set("wso.webui.service-table", self.toJSON())
+        r.set("wso.webui.service.table", self.toJSON())
+        r.set("wso.webui.service.count", self.count_services())
         
 def main(documents: func.DocumentList) -> str:
     if documents:
