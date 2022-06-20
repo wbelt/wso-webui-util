@@ -1,0 +1,15 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "type": "cosmosDBTrigger",
+      "name": "documents",
+      "direction": "in",
+      "leaseCollectionName": "leases",
+      "connectionStringSetting": "diydevcontrolplanedb_DOCUMENTDB",
+      "databaseName": "service-repository",
+      "collectionName": "services",
+      "createLeaseCollectionIfNotExists": true
+    }
+  ]
+}
